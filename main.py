@@ -38,3 +38,27 @@ class SecureRequester:
     def _safe_log(self, message: str, sensitive_data: str) -> str:
         sensitive_hash = hashlib.sha256(sensitive_data.encode()).hexdigest()[:8]
         return f"{message} [HASH:{sensitive_hash}]"
+    
+    def _send_invite_(self, email: str) -> bool:
+        try:
+            payload = self._secure_payload(email)
+            headers = self._secure_headers()
+
+            print(self._safe_log('Enviando para', email))
+            print(self._safe_log('Endopoint:', self.API_URL))
+
+            response = requests.post(
+                self.API_URL,
+                json=payload,
+                headers=headers
+            )
+
+            if response.status_code == 200:
+                print(self._safe_log('Sucesso', email))
+                return True
+            else:
+                print(f'Erro HTTP: {response.status_code}')
+        
+        except Exception as e:
+            print(f"Falha segura: {str(e)}")
+            return False
