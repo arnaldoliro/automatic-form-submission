@@ -58,7 +58,17 @@ class SecureRequester:
                 return True
             else:
                 print(f'Erro HTTP: {response.status_code}')
+                return False
         
         except Exception as e:
             print(f"Falha segura: {str(e)}")
             return False
+
+if __name__ == '__main__':
+    requester = SecureRequester()
+
+    for email in requester.emails:
+        if requester._send_invite_(email):
+            time.sleep(1)
+    
+    print('Processo concluido com segurança máxima')
